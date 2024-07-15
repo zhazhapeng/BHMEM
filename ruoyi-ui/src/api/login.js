@@ -35,6 +35,7 @@ export function register(data) {
 export function getInfo() {
   return request({
     url: '/getInfo',
+    // url: '/system/course/list',
     method: 'get'
   })
 }

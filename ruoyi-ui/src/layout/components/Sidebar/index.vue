@@ -52,6 +52,10 @@ export default {
         isCollapse() {
             return !this.sidebar.opened;
         }
+    },
+
+    mounted() {
+        console.log(this.sidebarRouters, '------------sidebarRouters');
     }
 };
 </script>

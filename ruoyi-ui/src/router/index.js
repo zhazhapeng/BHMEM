@@ -46,6 +46,13 @@ export const constantRoutes = [
     component: () => import('@/views/login'),
     hidden: true
   },
+  
+  // 课程管理
+  // {
+  //   path: '/course',
+  //   component: () => import('@/views/course'),
+  //   hidden: true
+  // },
   {
     path: '/register',
     component: () => import('@/views/register'),
@@ -68,10 +75,31 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/index'),
+        component: () => import('@/views/index_v1'),
         name: 'Index',
         meta: { title: '首页', icon: 'dashboard', affix: true }
-      }
+      },
+      // 课程管理
+      {
+        title: '课程管理',
+        path: '/bhMem/course',
+        component: () => import('@/views/course'),
+        hidden: false
+      },
+      // 实践记录
+      {
+        title: '实践记录',
+        path: '/bhMem/record',
+        component: () => import('@/views/record'),
+        hidden: false
+      },
+      // 学分统计
+      {
+        title: '学分统计',
+        path: '/bhMem/score',
+        component: () => import('@/views/score'),
+        hidden: false
+      },
     ]
   },
   {
