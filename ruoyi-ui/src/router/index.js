@@ -100,6 +100,35 @@ export const constantRoutes = [
         component: () => import('@/views/score'),
         hidden: false
       },
+      // 学生信息管理
+      {
+        title: '学生信息',
+        path: '/bhMem/studentInfo',
+        component: () => import('@/views/studentInfo'),
+        hidden: false
+      },
+      // 学生选课
+      {
+        title: '学生选课',
+        path: '/selectCourse',
+        component: () => import('@/views/studentCourse'),
+        hidden: false
+      },
+      // 学生申请课程学分
+      {
+        title: '学生课程管理',
+        path: '/bhMem/studentCourse',
+        component: () => import('@/views/studentCourse'),
+        hidden: false
+      },
+      // 教师审批
+      {
+        title: '教师审批',
+        path: '/bhMem/approval',
+        component: () => import('@/views/approval'),
+        hidden: false
+      },
+      
     ]
   },
   {

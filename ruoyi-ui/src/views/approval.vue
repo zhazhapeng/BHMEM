@@ -9,58 +9,18 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="计划id" prop="planId">
+      <el-form-item label="学生姓名" prop="studentName">
         <el-input
-          v-model="queryParams.planId"
-          placeholder="请输入计划id"
+          v-model="queryParams.studentName"
+          placeholder="请输入学生姓名"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="总得分" prop="scoreSum">
+      <el-form-item label="课程id" prop="courseId">
         <el-input
-          v-model="queryParams.scoreSum"
-          placeholder="请输入总得分"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="总得分要求" prop="scoreNeed">
-        <el-input
-          v-model="queryParams.scoreNeed"
-          placeholder="请输入总得分要求"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="必修学分要求" prop="scoreNecessary">
-        <el-input
-          v-model="queryParams.scoreNecessary"
-          placeholder="请输入必修学分要求"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="已获得必修学分" prop="scoreNecessarySum">
-        <el-input
-          v-model="queryParams.scoreNecessarySum"
-          placeholder="请输入已获得必修学分"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="选修学分要求" prop="scoreNoNecessary">
-        <el-input
-          v-model="queryParams.scoreNoNecessary"
-          placeholder="请输入选修学分要求"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="选修所得学分" prop="scoreNoNecessarySum">
-        <el-input
-          v-model="queryParams.scoreNoNecessarySum"
-          placeholder="请输入选修所得学分"
+          v-model="queryParams.courseId"
+          placeholder="请输入课程id"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -79,7 +39,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:score:add']"
+          v-hasPermi="['system:record:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -90,7 +50,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:score:edit']"
+          v-hasPermi="['system:record:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -101,7 +61,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:score:remove']"
+          v-hasPermi="['system:record:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -111,39 +71,44 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:score:export']"
+          v-hasPermi="['system:record:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="scoreList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="recordList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="学生学分表" align="center" prop="id" />
+      <el-table-column label="创建时间" align="center" prop="createTime" />
       <el-table-column label="学生id" align="center" prop="studentId" />
-      <el-table-column label="计划id" align="center" prop="planId" />
-      <el-table-column label="总得分" align="center" prop="scoreSum" />
-      <el-table-column label="总得分要求" align="center" prop="scoreNeed" />
-      <el-table-column label="必修学分要求" align="center" prop="scoreNecessary" />
-      <el-table-column label="已获得必修学分" align="center" prop="scoreNecessarySum" />
-      <el-table-column label="选修学分要求" align="center" prop="scoreNoNecessary" />
-      <el-table-column label="选修所得学分" align="center" prop="scoreNoNecessarySum" />
+      <el-table-column label="姓名" align="center" prop="nickName" />
+      <el-table-column label="课程id" align="center" prop="courseId" />
+      <el-table-column label="课程名称" align="center" prop="courseName" />
+      <el-table-column label="实践内容" align="center" prop="courseContent" />
+      <el-table-column label="审批状态" align="center" prop="applyStatus" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
+            icon="el-icon-success"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:score:edit']"
-          >修改</el-button>
+            v-hasPermi="['system:record:edit']"
+          >通过</el-button>
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-delete"
+            icon="el-icon-error"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:score:remove']"
-          >删除</el-button>
+            v-hasPermi="['system:record:remove']"
+          >驳回</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-more"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['system:record:remove']"
+          >更多</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -162,26 +127,11 @@
         <el-form-item label="学生id" prop="studentId">
           <el-input v-model="form.studentId" placeholder="请输入学生id" />
         </el-form-item>
-        <el-form-item label="计划id" prop="planId">
-          <el-input v-model="form.planId" placeholder="请输入计划id" />
+        <el-form-item label="课程id" prop="courseId">
+          <el-input v-model="form.courseId" placeholder="请输入课程id" />
         </el-form-item>
-        <el-form-item label="总得分" prop="scoreSum">
-          <el-input v-model="form.scoreSum" placeholder="请输入总得分" />
-        </el-form-item>
-        <el-form-item label="总得分要求" prop="scoreNeed">
-          <el-input v-model="form.scoreNeed" placeholder="请输入总得分要求" />
-        </el-form-item>
-        <el-form-item label="必修学分要求" prop="scoreNecessary">
-          <el-input v-model="form.scoreNecessary" placeholder="请输入必修学分要求" />
-        </el-form-item>
-        <el-form-item label="已获得必修学分" prop="scoreNecessarySum">
-          <el-input v-model="form.scoreNecessarySum" placeholder="请输入已获得必修学分" />
-        </el-form-item>
-        <el-form-item label="选修学分要求" prop="scoreNoNecessary">
-          <el-input v-model="form.scoreNoNecessary" placeholder="请输入选修学分要求" />
-        </el-form-item>
-        <el-form-item label="选修所得学分" prop="scoreNoNecessarySum">
-          <el-input v-model="form.scoreNoNecessarySum" placeholder="请输入选修所得学分" />
+        <el-form-item label="课程id">
+          <editor v-model="form.applyContent" :min-height="192"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -193,10 +143,11 @@
 </template>
 
 <script>
-import { listScore, getScore, delScore, addScore, updateScore } from "@/api/system/score";
+import { listRecord, getRecord, delRecord, addRecord, updateRecord } from "@/api/system/record";
+import mockData from '../mock/record_list';
 
 export default {
-  name: "Score",
+  name: "Record",
   data() {
     return {
       // 遮罩层
@@ -212,7 +163,7 @@ export default {
       // 总条数
       total: 0,
       // 【请填写功能名称】表格数据
-      scoreList: [],
+      recordList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -222,13 +173,9 @@ export default {
         pageNum: 1,
         pageSize: 10,
         studentId: null,
-        planId: null,
-        scoreSum: null,
-        scoreNeed: null,
-        scoreNecessary: null,
-        scoreNecessarySum: null,
-        scoreNoNecessary: null,
-        scoreNoNecessarySum: null,
+        courseId: null,
+        applyContent: null,
+        applyStatus: null,
       },
       // 表单参数
       form: {},
@@ -237,8 +184,11 @@ export default {
         studentId: [
           { required: true, message: "学生id不能为空", trigger: "blur" }
         ],
-        planId: [
-          { required: true, message: "计划id不能为空", trigger: "blur" }
+        studentName: [
+          { required: true, message: "学生姓名不能为空", trigger: "blur" }
+        ],
+        courseId: [
+          { required: true, message: "课程id不能为空", trigger: "blur" }
         ],
       }
     };
@@ -250,11 +200,14 @@ export default {
     /** 查询【请填写功能名称】列表 */
     getList() {
       this.loading = true;
-      listScore(this.queryParams).then(response => {
-        this.scoreList = response.rows;
+      // mock 
+      let response = mockData;
+      console.log(response , '----------------');
+      // listRecord(this.queryParams).then(response => {
+        this.recordList = response.rows;
         this.total = response.total;
         this.loading = false;
-      });
+      // });
     },
     // 取消按钮
     cancel() {
@@ -264,15 +217,11 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        id: null,
+        recordId: null,
         studentId: null,
-        planId: null,
-        scoreSum: null,
-        scoreNeed: null,
-        scoreNecessary: null,
-        scoreNecessarySum: null,
-        scoreNoNecessary: null,
-        scoreNoNecessarySum: null,
+        courseId: null,
+        applyContent: null,
+        applyStatus: null,
         createTime: null,
         updateTime: null
       };
@@ -290,7 +239,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.id)
+      this.ids = selection.map(item => item.recordId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -303,8 +252,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getScore(id).then(response => {
+      const recordId = row.recordId || this.ids
+      getRecord(recordId).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改【请填写功能名称】";
@@ -314,14 +263,14 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.id != null) {
-            updateScore(this.form).then(response => {
+          if (this.form.recordId != null) {
+            updateRecord(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addScore(this.form).then(response => {
+            addRecord(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -332,9 +281,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除【请填写功能名称】编号为"' + ids + '"的数据项？').then(function() {
-        return delScore(ids);
+      const recordIds = row.recordId || this.ids;
+      this.$modal.confirm('是否确认删除【请填写功能名称】编号为"' + recordIds + '"的数据项？').then(function() {
+        return delRecord(recordIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -342,9 +291,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/score/export', {
+      this.download('system/record/export', {
         ...this.queryParams
-      }, `score_${new Date().getTime()}.xlsx`)
+      }, `record_${new Date().getTime()}.xlsx`)
     }
   }
 };

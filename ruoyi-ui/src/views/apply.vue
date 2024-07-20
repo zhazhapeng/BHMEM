@@ -1,51 +1,42 @@
-<!-- 
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="所属年级" prop="grade">
+      <el-form-item label="计划名称" prop="planName">
         <el-input
-          v-model="queryParams.grade"
-          placeholder="请输入所属年级"
+          v-model="queryParams.planName"
+          placeholder="请输入计划名称"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="课程名称" prop="courseName">
+      <el-form-item label="计划所属年级" prop="planGrade">
         <el-input
-          v-model="queryParams.courseName"
-          placeholder="请输入课程名称"
+          v-model="queryParams.planGrade"
+          placeholder="请输入计划所属年级"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="课程分类" prop="courseCategory">
+      <el-form-item label="学分要求" prop="scoreAll">
         <el-input
-          v-model="queryParams.courseCategory"
-          placeholder="请输入课程分类"
+          v-model="queryParams.scoreAll"
+          placeholder="请输入学分要求"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="是否必修-1必修2选修" prop="necessary">
+      <el-form-item label="必修学分要求" prop="scoreNecessary">
         <el-input
-          v-model="queryParams.necessary"
-          placeholder="请输入是否必修-1必修2选修"
+          v-model="queryParams.scoreNecessary"
+          placeholder="请输入必修学分要求"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="课程学分" prop="score">
+      <el-form-item label="选修学分要求" prop="scoreNoNecessary">
         <el-input
-          v-model="queryParams.score"
-          placeholder="请输入课程学分"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="需完成次数" prop="requireTimes">
-        <el-input
-          v-model="queryParams.requireTimes"
-          placeholder="请输入需完成次数"
+          v-model="queryParams.scoreNoNecessary"
+          placeholder="请输入选修学分要求"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -64,7 +55,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:course:add']"
+          v-hasPermi="['system:plan:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -75,7 +66,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:course:edit']"
+          v-hasPermi="['system:plan:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -86,7 +77,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:course:remove']"
+          v-hasPermi="['system:plan:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -96,22 +87,20 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:course:export']"
+          v-hasPermi="['system:plan:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="courseList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="planList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="课程id" align="center" prop="courseId" />
-      <el-table-column label="所属年级" align="center" prop="grade" />
-      <el-table-column label="课程名称" align="center" prop="courseName" />
-      <el-table-column label="课程内容" align="center" prop="courseContent" />
-      <el-table-column label="课程分类" align="center" prop="courseCategory" />
-      <el-table-column label="是否必修-1必修2选修" align="center" prop="necessary" />
-      <el-table-column label="课程学分" align="center" prop="score" />
-      <el-table-column label="需完成次数" align="center" prop="requireTimes" />
+      <el-table-column label="课程计划id" align="center" prop="planId" />
+      <el-table-column label="计划名称" align="center" prop="planName" />
+      <el-table-column label="计划所属年级" align="center" prop="planGrade" />
+      <el-table-column label="学分要求" align="center" prop="scoreAll" />
+      <el-table-column label="必修学分要求" align="center" prop="scoreNecessary" />
+      <el-table-column label="选修学分要求" align="center" prop="scoreNoNecessary" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -119,14 +108,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:course:edit']"
+            v-hasPermi="['system:plan:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:course:remove']"
+            v-hasPermi="['system:plan:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -143,26 +132,20 @@
     <!-- 添加或修改【请填写功能名称】对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="所属年级" prop="grade">
-          <el-input v-model="form.grade" placeholder="请输入所属年级" />
+        <el-form-item label="计划名称" prop="planName">
+          <el-input v-model="form.planName" placeholder="请输入计划名称" />
         </el-form-item>
-        <el-form-item label="课程名称" prop="courseName">
-          <el-input v-model="form.courseName" placeholder="请输入课程名称" />
+        <el-form-item label="计划所属年级" prop="planGrade">
+          <el-input v-model="form.planGrade" placeholder="请输入计划所属年级" />
         </el-form-item>
-        <el-form-item label="课程内容">
-          <editor v-model="form.courseContent" :min-height="192"/>
+        <el-form-item label="学分要求" prop="scoreAll">
+          <el-input v-model="form.scoreAll" placeholder="请输入学分要求" />
         </el-form-item>
-        <el-form-item label="课程分类" prop="courseCategory">
-          <el-input v-model="form.courseCategory" placeholder="请输入课程分类" />
+        <el-form-item label="必修学分要求" prop="scoreNecessary">
+          <el-input v-model="form.scoreNecessary" placeholder="请输入必修学分要求" />
         </el-form-item>
-        <el-form-item label="是否必修-1必修2选修" prop="necessary">
-          <el-input v-model="form.necessary" placeholder="请输入是否必修-1必修2选修" />
-        </el-form-item>
-        <el-form-item label="课程学分" prop="score">
-          <el-input v-model="form.score" placeholder="请输入课程学分" />
-        </el-form-item>
-        <el-form-item label="需完成次数" prop="requireTimes">
-          <el-input v-model="form.requireTimes" placeholder="请输入需完成次数" />
+        <el-form-item label="选修学分要求" prop="scoreNoNecessary">
+          <el-input v-model="form.scoreNoNecessary" placeholder="请输入选修学分要求" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -174,10 +157,10 @@
 </template>
 
 <script>
-import { listCourse, getCourse, delCourse, addCourse, updateCourse } from "@/api/system/course";
+import { listPlan, getPlan, delPlan, addPlan, updatePlan } from "@/api/system/plan";
 
 export default {
-  name: "Course",
+  name: "Plan",
   data() {
     return {
       // 遮罩层
@@ -193,7 +176,7 @@ export default {
       // 总条数
       total: 0,
       // 【请填写功能名称】表格数据
-      courseList: [],
+      planList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -202,13 +185,11 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        grade: null,
-        courseName: null,
-        courseContent: null,
-        courseCategory: null,
-        necessary: null,
-        score: null,
-        requireTimes: null,
+        planName: null,
+        planGrade: null,
+        scoreAll: null,
+        scoreNecessary: null,
+        scoreNoNecessary: null,
       },
       // 表单参数
       form: {},
@@ -224,8 +205,8 @@ export default {
     /** 查询【请填写功能名称】列表 */
     getList() {
       this.loading = true;
-      listCourse(this.queryParams).then(response => {
-        this.courseList = response.rows;
+      listPlan(this.queryParams).then(response => {
+        this.planList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -238,14 +219,12 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        courseId: null,
-        grade: null,
-        courseName: null,
-        courseContent: null,
-        courseCategory: null,
-        necessary: null,
-        score: null,
-        requireTimes: null,
+        planId: null,
+        planName: null,
+        planGrade: null,
+        scoreAll: null,
+        scoreNecessary: null,
+        scoreNoNecessary: null,
         createTime: null,
         updateTime: null
       };
@@ -263,7 +242,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.courseId)
+      this.ids = selection.map(item => item.planId)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -276,8 +255,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const courseId = row.courseId || this.ids
-      getCourse(courseId).then(response => {
+      const planId = row.planId || this.ids
+      getPlan(planId).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改【请填写功能名称】";
@@ -287,14 +266,14 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.courseId != null) {
-            updateCourse(this.form).then(response => {
+          if (this.form.planId != null) {
+            updatePlan(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addCourse(this.form).then(response => {
+            addPlan(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -305,9 +284,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const courseIds = row.courseId || this.ids;
-      this.$modal.confirm('是否确认删除【请填写功能名称】编号为"' + courseIds + '"的数据项？').then(function() {
-        return delCourse(courseIds);
+      const planIds = row.planId || this.ids;
+      this.$modal.confirm('是否确认删除【请填写功能名称】编号为"' + planIds + '"的数据项？').then(function() {
+        return delPlan(planIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -315,78 +294,10 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/course/export', {
+      this.download('system/plan/export', {
         ...this.queryParams
-      }, `course_${new Date().getTime()}.xlsx`)
+      }, `plan_${new Date().getTime()}.xlsx`)
     }
   }
 };
 </script>
- -->
-
-
-<template>
-  <div class="course">
-    课程管理
-  </div>
-</template>
-
-<script>
-import { getCodeImg } from "@/api/login";
-import Cookies from "js-cookie";
-import { encrypt, decrypt } from '@/utils/jsencrypt'
-
-export default {
-  name: "course",
-  data() {
-    return {
-      codeUrl: "",
-     
-    };
-  },
-  watch: {
-    $route: {
-      handler: function(route) {
-        this.redirect = route.query && route.query.redirect;
-      },
-      immediate: true
-    }
-  },
-  created() {
-   
-  },
-  methods: {
- 
-    getCookie() {
-      const username = Cookies.get("username");
-      const password = Cookies.get("password");
-      const rememberMe = Cookies.get('rememberMe')
-      this.loginForm = {
-        username: username === undefined ? this.loginForm.username : username,
-        password: password === undefined ? this.loginForm.password : decrypt(password),
-        rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
-      };
-    },
-    handleLogin() {
-    }
-  }
-};
-</script>
-
-<style rel="stylesheet/scss" lang="scss">
-.login {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  background-image: url("../assets/images/login-background.jpg");
-  background-size: cover;
-}
-.title {
-  margin: 0px auto 30px auto;
-  text-align: center;
-  color: #707070;
-}
-
-
-</style>

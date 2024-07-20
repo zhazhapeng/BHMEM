@@ -13,18 +13,17 @@ const baseRouter = [
           "link": null
       },
       "children": [
-          // {
-          //     "name": "Plan",
-          //     "path": "plan",
-          //     "hidden": false,
-          //     "component": "ParentView",
-          //     "meta": {
-          //         "title": "学分计划",
-          //         "icon": "education",
-          //         "noCache": false,
-          //         "link": null
-          //     }
-          // },
+          {
+              "name": "studentInfo",
+              "path": "studentInfo",
+              "hidden": false,
+              "meta": {
+                  "title": "学生信息管理",
+                  "icon": "education",
+                  "noCache": false,
+                  "link": null
+              }
+          },
           {
               "name": "Course",
               "path": "course",
@@ -106,6 +105,6 @@ const getters = {
   topbarRouters:state => state.permission.topbarRouters,
   defaultRoutes:state => state.permission.defaultRoutes,
   sidebarRouters:state => state.permission.sidebarRouters,
-  // sidebarRouters:()=> baseRouter,
+//   sidebarRouters:()=> baseRouter,
 }
 export default getters

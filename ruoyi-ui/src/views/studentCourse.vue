@@ -1,66 +1,27 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="学生id" prop="studentId">
+      <el-form-item label="课程id" prop="courseId">
         <el-input
-          v-model="queryParams.studentId"
-          placeholder="请输入学生id"
+          v-model="queryParams.userId"
+          placeholder="请输入课程id"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="计划id" prop="planId">
+      <el-form-item label="课程名称" prop="courseName">
         <el-input
-          v-model="queryParams.planId"
-          placeholder="请输入计划id"
+          v-model="queryParams.courseName"
+          placeholder="请输入课程名称"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="总得分" prop="scoreSum">
+      
+      <el-form-item label="导师" prop="teacher">
         <el-input
-          v-model="queryParams.scoreSum"
-          placeholder="请输入总得分"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="总得分要求" prop="scoreNeed">
-        <el-input
-          v-model="queryParams.scoreNeed"
-          placeholder="请输入总得分要求"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="必修学分要求" prop="scoreNecessary">
-        <el-input
-          v-model="queryParams.scoreNecessary"
-          placeholder="请输入必修学分要求"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="已获得必修学分" prop="scoreNecessarySum">
-        <el-input
-          v-model="queryParams.scoreNecessarySum"
-          placeholder="请输入已获得必修学分"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="选修学分要求" prop="scoreNoNecessary">
-        <el-input
-          v-model="queryParams.scoreNoNecessary"
-          placeholder="请输入选修学分要求"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="选修所得学分" prop="scoreNoNecessarySum">
-        <el-input
-          v-model="queryParams.scoreNoNecessarySum"
-          placeholder="请输入选修所得学分"
+          v-model="queryParams.teacher"
+          placeholder="请输入导师"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -79,7 +40,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:score:add']"
+          v-hasPermi="['system:info:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -90,7 +51,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:score:edit']"
+          v-hasPermi="['system:info:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -101,7 +62,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:score:remove']"
+          v-hasPermi="['system:info:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -111,39 +72,48 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:score:export']"
+          v-hasPermi="['system:info:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="scoreList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="infoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="学生学分表" align="center" prop="id" />
-      <el-table-column label="学生id" align="center" prop="studentId" />
-      <el-table-column label="计划id" align="center" prop="planId" />
-      <el-table-column label="总得分" align="center" prop="scoreSum" />
-      <el-table-column label="总得分要求" align="center" prop="scoreNeed" />
-      <el-table-column label="必修学分要求" align="center" prop="scoreNecessary" />
-      <el-table-column label="已获得必修学分" align="center" prop="scoreNecessarySum" />
-      <el-table-column label="选修学分要求" align="center" prop="scoreNoNecessary" />
-      <el-table-column label="选修所得学分" align="center" prop="scoreNoNecessarySum" />
+      <el-table-column label="课程编号" align="center" prop="courseId" />
+      <el-table-column label="一级课程名称" align="center" prop="courseName" />
+      <el-table-column label="二级课程名称" align="center" prop="secondCourseName" />
+      <el-table-column label="课程内容" align="center" prop="courseContent" />
+      <el-table-column label="必修/选修" align="center" prop="necessary" />
+      <el-table-column label="需完成次数" align="center" prop="requireTimes" />
+      <el-table-column label="学分" align="center" prop="score" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
+        <template slot-scope="scope" v-if="true">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:score:edit']"
-          >修改</el-button>
+            v-hasPermi="['system:info:edit']"
+          >选择</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:score:remove']"
-          >删除</el-button>
+            v-hasPermi="['system:info:remove']"
+          >取消</el-button>
+        </template>
+
+        <template slot-scope="scope" v-else>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            disabled="true"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['system:info:edit']"
+          >审批中</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -159,29 +129,17 @@
     <!-- 添加或修改【请填写功能名称】对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="学生id" prop="studentId">
-          <el-input v-model="form.studentId" placeholder="请输入学生id" />
+        <el-form-item label="用户id" prop="userId">
+          <el-input v-model="form.userId" placeholder="请输入用户id" />
         </el-form-item>
-        <el-form-item label="计划id" prop="planId">
-          <el-input v-model="form.planId" placeholder="请输入计划id" />
+        <el-form-item label="工号" prop="workNo">
+          <el-input v-model="form.workNo" placeholder="请输入工号" />
         </el-form-item>
-        <el-form-item label="总得分" prop="scoreSum">
-          <el-input v-model="form.scoreSum" placeholder="请输入总得分" />
+        <el-form-item label="班级" prop="workClass">
+          <el-input v-model="form.workClass" placeholder="请输入班级" />
         </el-form-item>
-        <el-form-item label="总得分要求" prop="scoreNeed">
-          <el-input v-model="form.scoreNeed" placeholder="请输入总得分要求" />
-        </el-form-item>
-        <el-form-item label="必修学分要求" prop="scoreNecessary">
-          <el-input v-model="form.scoreNecessary" placeholder="请输入必修学分要求" />
-        </el-form-item>
-        <el-form-item label="已获得必修学分" prop="scoreNecessarySum">
-          <el-input v-model="form.scoreNecessarySum" placeholder="请输入已获得必修学分" />
-        </el-form-item>
-        <el-form-item label="选修学分要求" prop="scoreNoNecessary">
-          <el-input v-model="form.scoreNoNecessary" placeholder="请输入选修学分要求" />
-        </el-form-item>
-        <el-form-item label="选修所得学分" prop="scoreNoNecessarySum">
-          <el-input v-model="form.scoreNoNecessarySum" placeholder="请输入选修所得学分" />
+        <el-form-item label="导师" prop="teacher">
+          <el-input v-model="form.teacher" placeholder="请输入导师" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -193,10 +151,11 @@
 </template>
 
 <script>
-import { listScore, getScore, delScore, addScore, updateScore } from "@/api/system/score";
+import { listInfo, getInfo, delInfo, addInfo, updateInfo } from "@/api/system/info";
+import mockData from '../mock/course_list';
 
 export default {
-  name: "Score",
+  name: "Info",
   data() {
     return {
       // 遮罩层
@@ -212,7 +171,7 @@ export default {
       // 总条数
       total: 0,
       // 【请填写功能名称】表格数据
-      scoreList: [],
+      infoList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -221,24 +180,18 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        studentId: null,
-        planId: null,
-        scoreSum: null,
-        scoreNeed: null,
-        scoreNecessary: null,
-        scoreNecessarySum: null,
-        scoreNoNecessary: null,
-        scoreNoNecessarySum: null,
+        userId: null,
+        workNo: null,
+        workClass: null,
+        degreeType: null,
+        teacher: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        studentId: [
-          { required: true, message: "学生id不能为空", trigger: "blur" }
-        ],
-        planId: [
-          { required: true, message: "计划id不能为空", trigger: "blur" }
+        userId: [
+          { required: true, message: "用户id不能为空", trigger: "blur" }
         ],
       }
     };
@@ -250,11 +203,14 @@ export default {
     /** 查询【请填写功能名称】列表 */
     getList() {
       this.loading = true;
-      listScore(this.queryParams).then(response => {
-        this.scoreList = response.rows;
+      
+      const response = mockData;
+      console.log(response, '-----------');
+      // listInfo(this.queryParams).then(response => {
+        this.infoList = response.rows;
         this.total = response.total;
         this.loading = false;
-      });
+      // });
     },
     // 取消按钮
     cancel() {
@@ -265,14 +221,11 @@ export default {
     reset() {
       this.form = {
         id: null,
-        studentId: null,
-        planId: null,
-        scoreSum: null,
-        scoreNeed: null,
-        scoreNecessary: null,
-        scoreNecessarySum: null,
-        scoreNoNecessary: null,
-        scoreNoNecessarySum: null,
+        userId: null,
+        workNo: null,
+        workClass: null,
+        degreeType: null,
+        teacher: null,
         createTime: null,
         updateTime: null
       };
@@ -304,7 +257,7 @@ export default {
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getScore(id).then(response => {
+      getInfo(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改【请填写功能名称】";
@@ -315,13 +268,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateScore(this.form).then(response => {
+            updateInfo(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addScore(this.form).then(response => {
+            addInfo(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -334,7 +287,7 @@ export default {
     handleDelete(row) {
       const ids = row.id || this.ids;
       this.$modal.confirm('是否确认删除【请填写功能名称】编号为"' + ids + '"的数据项？').then(function() {
-        return delScore(ids);
+        return delInfo(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -342,9 +295,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/score/export', {
+      this.download('system/info/export', {
         ...this.queryParams
-      }, `score_${new Date().getTime()}.xlsx`)
+      }, `info_${new Date().getTime()}.xlsx`)
     }
   }
 };
