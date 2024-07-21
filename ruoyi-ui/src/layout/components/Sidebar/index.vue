@@ -28,12 +28,13 @@ import { mapGetters, mapState } from "vuex";
 import Logo from "./Logo";
 import SidebarItem from "./SidebarItem";
 import variables from "@/assets/styles/variables.scss";
-
+import sidebarRouters from "@/mock/router"
 export default {
     components: { SidebarItem, Logo },
     computed: {
         ...mapState(["settings"]),
         ...mapGetters(["sidebarRouters", "sidebar"]),
+        // ...mapGetters([ "sidebar"]),
         activeMenu() {
             const route = this.$route;
             const { meta, path } = route;
@@ -55,6 +56,7 @@ export default {
     },
 
     mounted() {
+        // this.sidebarRouters = sidebarRouters.data;
         console.log(this.sidebarRouters, '------------sidebarRouters');
     }
 };

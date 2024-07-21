@@ -3,7 +3,7 @@
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
       <el-form-item label="课程id" prop="courseId">
         <el-input
-          v-model="queryParams.userId"
+          v-model="queryParams.courseId"
           placeholder="请输入课程id"
           clearable
           @keyup.enter.native="handleQuery"
@@ -32,50 +32,18 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
+    <el-row :gutter="10" class="mb8" style="display: flex; justify-content: flex-end; padding-bottom: 2%;">
       <el-col :span="1.5">
         <el-button
           type="primary"
           plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:info:add']"
-        >新增</el-button>
+          icon="el-icon-success"
+          size="middle"
+          @click="handleSubmit"
+         
+        >确认提交</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:info:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['system:info:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:info:export']"
-        >导出</el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
+      <!-- <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar> -->
     </el-row>
 
     <el-table v-loading="loading" :data="infoList" @selection-change="handleSelectionChange">
@@ -87,20 +55,20 @@
       <el-table-column label="必修/选修" align="center" prop="necessary" />
       <el-table-column label="需完成次数" align="center" prop="requireTimes" />
       <el-table-column label="学分" align="center" prop="score" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope" v-if="true">
           <el-button
             size="mini"
             type="text"
             icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
+            @click="handleItem(scope.row)"
             v-hasPermi="['system:info:edit']"
           >选择</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
+            @click="handleItem(scope.row)"
             v-hasPermi="['system:info:remove']"
           >取消</el-button>
         </template>
@@ -115,7 +83,8 @@
             v-hasPermi="['system:info:edit']"
           >审批中</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
+
     </el-table>
     
     <pagination
@@ -127,8 +96,8 @@
     />
 
     <!-- 添加或修改【请填写功能名称】对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" middle :visible.sync="open" width="500px" append-to-body>
+      <!-- <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="用户id" prop="userId">
           <el-input v-model="form.userId" placeholder="请输入用户id" />
         </el-form-item>
@@ -141,7 +110,18 @@
         <el-form-item label="导师" prop="teacher">
           <el-input v-model="form.teacher" placeholder="请输入导师" />
         </el-form-item>
-      </el-form>
+      </el-form> -->
+
+      <el-col :span="22">
+            <el-form-item label="上传" prop="field111" required>
+              <el-upload ref="field111" :file-list="field111fileList" :action="field111Action"
+                :before-upload="field111BeforeUpload" list-type="picture" name="file_url">
+                <el-button size="small" type="primary" icon="el-icon-upload">点击上传</el-button>
+              </el-upload>
+            </el-form-item>
+          </el-col>
+
+      <!-- 这个位置贴一张说明图片？ -->
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
@@ -151,7 +131,8 @@
 </template>
 
 <script>
-import { listInfo, getInfo, delInfo, addInfo, updateInfo } from "@/api/system/info";
+// import { listInfo, getInfo, delInfo, addInfo, updateInfo } from "@/api/system/info";
+import { listCourse, getCourse, delCourse, addCourse, updateCourse } from "@/api/system/course";
 import mockData from '../mock/course_list';
 
 export default {
@@ -204,13 +185,13 @@ export default {
     getList() {
       this.loading = true;
       
-      const response = mockData;
-      console.log(response, '-----------');
-      // listInfo(this.queryParams).then(response => {
+      // const response = mockData;
+      // console.log(response, '-----------');
+      listCourse(this.queryParams).then(response => {
         this.infoList = response.rows;
         this.total = response.total;
         this.loading = false;
-      // });
+      });
     },
     // 取消按钮
     cancel() {
@@ -241,17 +222,20 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
+    handleItem(item) {
+      this.handleSelectionChange([item]);
+    },
     // 多选框选中数据
     handleSelectionChange(selection) {
+      console.log(selection, '-----------');
       this.ids = selection.map(item => item.id)
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
-    handleAdd() {
-      this.reset();
+    handleSubmit() {
       this.open = true;
-      this.title = "添加【请填写功能名称】";
+      this.title = "确定提交";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

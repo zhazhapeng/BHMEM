@@ -112,6 +112,7 @@
       <el-table-column label="是否必修-1必修2选修" align="center" prop="necessary" />
       <el-table-column label="课程学分" align="center" prop="score" />
       <el-table-column label="需完成次数" align="center" prop="requireTimes" />
+      <el-table-column label="完成状态" align="center" prop="progress" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button

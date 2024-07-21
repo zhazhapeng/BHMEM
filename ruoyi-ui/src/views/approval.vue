@@ -32,17 +32,8 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:record:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
+      
+      <!-- <el-col :span="1.5">
         <el-button
           type="success"
           plain
@@ -52,7 +43,7 @@
           @click="handleUpdate"
           v-hasPermi="['system:record:edit']"
         >修改</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="danger"
@@ -106,9 +97,9 @@
             size="mini"
             type="text"
             icon="el-icon-more"
-            @click="handleDelete(scope.row)"
+            @click="handleAdd(scope.row)"
             v-hasPermi="['system:record:remove']"
-          >更多</el-button>
+          >详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -124,13 +115,13 @@
     <!-- 添加或修改【请填写功能名称】对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="学生id" prop="studentId">
-          <el-input v-model="form.studentId" placeholder="请输入学生id" />
+        <el-form-item label="实践内容" prop="studentId">
+          <!-- <el-input v-model="form.studentId" placeholder="请输入学生id" /> -->
         </el-form-item>
-        <el-form-item label="课程id" prop="courseId">
-          <el-input v-model="form.courseId" placeholder="请输入课程id" />
+        <el-form-item label="实践实践" prop="courseId">
+          <!-- <el-input v-model="form.courseId" placeholder="请输入课程id" /> -->
         </el-form-item>
-        <el-form-item label="课程id">
+        <el-form-item label="附件展示">
           <editor v-model="form.applyContent" :min-height="192"/>
         </el-form-item>
       </el-form>
@@ -247,7 +238,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加【请填写功能名称】";
+      this.title = "申请详情";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {

@@ -82,15 +82,15 @@ export const constantRoutes = [
       // 课程管理
       {
         title: '课程管理',
-        path: '/bhMem/course',
+        path: '/planManage/course',
         component: () => import('@/views/course'),
         hidden: false
       },
       // 实践记录
       {
         title: '实践记录',
-        path: '/bhMem/record',
-        component: () => import('@/views/record'),
+        path: '/practice/apply',
+        component: () => import('@/views/apply'),
         hidden: false
       },
       // 学分统计
@@ -110,7 +110,7 @@ export const constantRoutes = [
       // 学生选课
       {
         title: '学生选课',
-        path: '/selectCourse',
+        path: '/practice/studentCourse',
         component: () => import('@/views/studentCourse'),
         hidden: false
       },
@@ -124,11 +124,17 @@ export const constantRoutes = [
       // 教师审批
       {
         title: '教师审批',
-        path: '/bhMem/approval',
+        path: '/practice/practiceRecord',
         component: () => import('@/views/approval'),
         hidden: false
       },
-      
+      // 计划管理
+      {
+        title: '计划管理',
+        path: '/planManage/plan',
+        component: () => import('@/views/approval'),
+        hidden: false
+      },
     ]
   },
   {

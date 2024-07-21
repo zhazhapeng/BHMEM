@@ -5,7 +5,7 @@ export function listCourse(query) {
   return request({
     url: '/system/course/list',
     method: 'get',
-    // params: query
+    params: query
   })
 }
 

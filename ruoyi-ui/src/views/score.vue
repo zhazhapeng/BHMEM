@@ -209,6 +209,7 @@ export default {
       multiple: true,
       // 显示搜索条件
       showSearch: true,
+      // /score/search/list
       // 总条数
       total: 0,
       // 【请填写功能名称】表格数据

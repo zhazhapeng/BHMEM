@@ -76,81 +76,161 @@ const routers = {
                         "link": null
                     }
                 },
+                // {
+                //     "name": "Dict",
+                //     "path": "dict",
+                //     "hidden": false,
+                //     "component": "system/dict/index",
+                //     "meta": {
+                //         "title": "字典管理",
+                //         "icon": "dict",
+                //         "noCache": false,
+                //         "link": null
+                //     }
+                // },
+                // {
+                //     "name": "Config",
+                //     "path": "config",
+                //     "hidden": false,
+                //     "component": "system/config/index",
+                //     "meta": {
+                //         "title": "参数设置",
+                //         "icon": "edit",
+                //         "noCache": false,
+                //         "link": null
+                //     }
+                // },
+                // {
+                //     "name": "Notice",
+                //     "path": "notice",
+                //     "hidden": false,
+                //     "component": "system/notice/index",
+                //     "meta": {
+                //         "title": "通知公告",
+                //         "icon": "message",
+                //         "noCache": false,
+                //         "link": null
+                //     }
+                // },
+                // {
+                //     "name": "Log",
+                //     "path": "log",
+                //     "hidden": false,
+                //     "redirect": "noRedirect",
+                //     "component": "ParentView",
+                //     "alwaysShow": true,
+                //     "meta": {
+                //         "title": "日志管理",
+                //         "icon": "log",
+                //         "noCache": false,
+                //         "link": null
+                //     },
+                //     "children": [
+                //         {
+                //             "name": "Operlog",
+                //             "path": "operlog",
+                //             "hidden": false,
+                //             "component": "monitor/operlog/index",
+                //             "meta": {
+                //                 "title": "操作日志",
+                //                 "icon": "form",
+                //                 "noCache": false,
+                //                 "link": null
+                //             }
+                //         },
+                //         {
+                //             "name": "Logininfor",
+                //             "path": "logininfor",
+                //             "hidden": false,
+                //             "component": "monitor/logininfor/index",
+                //             "meta": {
+                //                 "title": "登录日志",
+                //                 "icon": "logininfor",
+                //                 "noCache": false,
+                //                 "link": null
+                //             }
+                //         }
+                //     ]
+                // }
+            ]
+        },
+        {
+            "name": "BhMem",
+            "path": "/bhMem",
+            "hidden": false,
+            "redirect": "noRedirect",
+            "component": "Layout",
+            "alwaysShow": true,
+            "meta": {
+                "title": "课程计划管理",
+                "icon": "education",
+                "noCache": false,
+                "link": null
+            },
+            "children": [
                 {
-                    "name": "Dict",
-                    "path": "dict",
+                    "name": "Course",
+                    "path": "course",
                     "hidden": false,
-                    "component": "system/dict/index",
-                    "meta": {
-                        "title": "字典管理",
-                        "icon": "dict",
-                        "noCache": false,
-                        "link": null
-                    }
-                },
-                {
-                    "name": "Config",
-                    "path": "config",
-                    "hidden": false,
-                    "component": "system/config/index",
-                    "meta": {
-                        "title": "参数设置",
-                        "icon": "edit",
-                        "noCache": false,
-                        "link": null
-                    }
-                },
-                {
-                    "name": "Notice",
-                    "path": "notice",
-                    "hidden": false,
-                    "component": "system/notice/index",
-                    "meta": {
-                        "title": "通知公告",
-                        "icon": "message",
-                        "noCache": false,
-                        "link": null
-                    }
-                },
-                {
-                    "name": "Log",
-                    "path": "log",
-                    "hidden": false,
-                    "redirect": "noRedirect",
                     "component": "ParentView",
-                    "alwaysShow": true,
                     "meta": {
-                        "title": "日志管理",
-                        "icon": "log",
+                        "title": "课程",
+                        "icon": "education",
                         "noCache": false,
                         "link": null
-                    },
-                    "children": [
-                        {
-                            "name": "Operlog",
-                            "path": "operlog",
-                            "hidden": false,
-                            "component": "monitor/operlog/index",
-                            "meta": {
-                                "title": "操作日志",
-                                "icon": "form",
-                                "noCache": false,
-                                "link": null
-                            }
-                        },
-                        {
-                            "name": "Logininfor",
-                            "path": "logininfor",
-                            "hidden": false,
-                            "component": "monitor/logininfor/index",
-                            "meta": {
-                                "title": "登录日志",
-                                "icon": "logininfor",
-                                "noCache": false,
-                                "link": null
-                            }
-                        }
-                    ]
+                    }
+                },
+                {
+                    "name": "/bhMem/plan",
+                    "path": "/bhMem/plan",
+                    "hidden": false,
+                    "component": "ParentView",
+                    "meta": {
+                        "title": "计划管理",
+                        "icon": "education",
+                        "noCache": false,
+                        "link": null
+                    }
+                }
+            ]
+        },
+        {
+            "name": "/",
+            "path": "/",
+            "hidden": false,
+            "redirect": "noRedirect",
+            "component": "Layout",
+            "alwaysShow": true,
+            "meta": {
+                "title": "学生选课和实践",
+                "icon": "education",
+                "noCache": false,
+                "link": null
+            },
+            "children": [
+                {
+                    "name": "/bhMem/studentCourse",
+                    "path": "/bhMem/studentCourse",
+                    "hidden": false,
+                    "component": "ParentView",
+                    "meta": {
+                        "title": "选课管理",
+                        "icon": "#",
+                        "noCache": false,
+                        "link": null
+                    }
+                },
+                {
+                    "name": "/bhMem/studentCourse",
+                    "path": "/bhMem/studentCourse",
+                    "hidden": false,
+                    "component": "ParentView",
+                    "meta": {
+                        "title": "实践记录管理",
+                        "icon": "education",
+                        "noCache": false,
+                        "link": null
+                    }
                 }
             ]
         },
@@ -295,14 +375,14 @@ const routers = {
             ]
         },
         {
-            "name": "Edu",
-            "path": "/edu",
+            "name": "BhMem",
+            "path": "/bhMem",
             "hidden": false,
             "redirect": "noRedirect",
             "component": "Layout",
             "alwaysShow": true,
             "meta": {
-                "title": "学分计划管理",
+                "title": "学分管理",
                 "icon": "education",
                 "noCache": false,
                 "link": null
@@ -321,6 +401,18 @@ const routers = {
                     }
                 },
                 {
+                    "name": "/bhMem/studentCourse",
+                    "path": "/bhMem/studentCourse",
+                    "hidden": false,
+                    "component": "ParentView",
+                    "meta": {
+                        "title": "学生端-我的课程",
+                        "icon": "form",
+                        "noCache": false,
+                        "link": null
+                    }
+                },
+                {
                     "name": "Course",
                     "path": "course",
                     "hidden": false,
@@ -333,12 +425,12 @@ const routers = {
                     }
                 },
                 {
-                    "name": "Course/select",
-                    "path": "course/select",
+                    "name": "/selectCourse",
+                    "path": "/selectCourse",
                     "hidden": false,
                     "component": "ParentView",
                     "meta": {
-                        "title": "学生选课",
+                        "title": "选课管理",
                         "icon": "education",
                         "noCache": false,
                         "link": null
