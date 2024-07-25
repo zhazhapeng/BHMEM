@@ -1,53 +1,46 @@
 import request from '@/utils/request'
 
+
 // 查询【请填写功能名称】列表
-export function listCourse(query) {
+export function listScore(query) {
   return request({
-    url: '/system/course/list',
+    url: '/system/student/course/score/list',
     method: 'get',
     params: query
   })
 }
 
+
 // 查询【请填写功能名称】详细
-export function getCourse(courseId) {
+export function getScore(id) {
   return request({
-    url: '/system/course/' + courseId,
+    url: '/system/score/' + id,
     method: 'get'
   })
 }
 
-// 新增【选课】
-export function selectCourse(data) {
-  return request({
-    url: '/system/course/study/plan/choose',
-    method: 'post',
-    data: data
-  })
-}
-
 // 新增【请填写功能名称】
-export function addCourse(data) {
+export function addScore(data) {
   return request({
-    url: '/system/course',
+    url: '/system/score',
     method: 'post',
     data: data
   })
 }
 
 // 修改【请填写功能名称】
-export function updateCourse(data) {
+export function updateScore(data) {
   return request({
-    url: '/system/course',
+    url: '/system/score',
     method: 'put',
     data: data
   })
 }
 
 // 删除【请填写功能名称】
-export function delCourse(courseId) {
+export function delScore(id) {
   return request({
-    url: '/system/course/' + courseId,
+    url: '/system/score/' + id,
     method: 'delete'
   })
 }

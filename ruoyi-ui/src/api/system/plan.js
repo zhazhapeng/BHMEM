@@ -1,18 +1,18 @@
 import request from '@/utils/request'
 
-// 查询【请填写功能名称】列表
+// 获取学分计划
 export function listPlan(query) {
   return request({
-    url: '/system/plan/list',
+    url: '/system/study/plan/list',
     method: 'get',
     params: query
   })
 }
 
-// 查询【请填写功能名称】详细
+// 按条件获取学分计划中的一条
 export function getPlan(planId) {
   return request({
-    url: '/system/plan/' + planId,
+    url: '/system/study/plan/selectOne' + planId,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getPlan(planId) {
 // 新增【请填写功能名称】
 export function addPlan(data) {
   return request({
-    url: '/system/plan',
+    url: '/system/study/plan',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addPlan(data) {
 // 修改【请填写功能名称】
 export function updatePlan(data) {
   return request({
-    url: '/system/plan',
+    url: '/system/study/plan',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updatePlan(data) {
 // 删除【请填写功能名称】
 export function delPlan(planId) {
   return request({
-    url: '/system/plan/' + planId,
+    url: '/system/study/plan/' + planId,
     method: 'delete'
   })
 }

@@ -93,11 +93,18 @@ export const constantRoutes = [
         component: () => import('@/views/apply'),
         hidden: false
       },
-      // 学分统计
+      // 教师端-学分统计
       {
         title: '学分统计',
         path: '/bhMem/score',
         component: () => import('@/views/score'),
+        hidden: false
+      },
+      // 学生端-学分统计
+      {
+        title: '学分统计',
+        path: '/bhMem/studentScore',
+        component: () => import('@/views/studentScore'),
         hidden: false
       },
       // 学生信息管理
@@ -132,7 +139,7 @@ export const constantRoutes = [
       {
         title: '计划管理',
         path: '/planManage/plan',
-        component: () => import('@/views/approval'),
+        component: () => import('@/views/plan'),
         hidden: false
       },
     ]

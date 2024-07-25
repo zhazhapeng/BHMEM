@@ -93,8 +93,8 @@
         <el-form-item label="实践内容" prop="apply_content">
           <el-input v-model="form.apply_content" placeholder="请输内容描述" />
         </el-form-item>
-        <el-form-item label="实践结果" prop="apply_status">
-          <el-input v-model="form.apply_status" placeholder="请输入实践结果" />
+        <el-form-item label="实践收获" prop="apply_gain">
+          <el-input v-model="form.apply_gain" placeholder="请输入实践收获" />
         </el-form-item>
         <!-- <el-form-item label="展示">
           <editor v-model="form.file_url" :min-height="192"/>
@@ -172,15 +172,15 @@ export default {
       // 表单参数
       form: {
         file_url: "",
-        student_id: 3,
+        // student_id: 3,
       },
       // 表单校验
       rules: {
         apply_content: [
           { required: true, message: "实践内容不能为空", trigger: "blur" }
         ],
-        apply_status: [
-          { required: true, message: "实践内容不能为空", trigger: "blur" }
+        apply_gain: [
+          { required: false, message: "实收获不能为空", trigger: "blur" }
         ],
       },
       // 上传图片数量
@@ -216,6 +216,7 @@ export default {
     },
       // 上传成功回调
       handleUploadSuccess(res, file) {
+        console.log(res, file, '图片上传成功----------');
       if (res.code === 200) {
         this.uploadList.push({ name: res.originalFilename, url: res.url });
         this.form.file_url = res.url;

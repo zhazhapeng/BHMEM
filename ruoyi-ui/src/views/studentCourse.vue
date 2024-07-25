@@ -52,39 +52,10 @@
       <el-table-column label="一级课程名称" align="center" prop="courseName" />
       <el-table-column label="二级课程名称" align="center" prop="secondCourseName" />
       <el-table-column label="课程内容" align="center" prop="courseContent" />
-      <el-table-column label="必修/选修" align="center" prop="necessary" />
+      <el-table-column label="必修/选修" align="center" prop="necessary" :formatter="getCourseRequire"/>
       <el-table-column label="需完成次数" align="center" prop="requireTimes" />
-      <el-table-column label="学分" align="center" prop="score" />
-      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope" v-if="true">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleItem(scope.row)"
-            v-hasPermi="['system:info:edit']"
-          >选择</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleItem(scope.row)"
-            v-hasPermi="['system:info:remove']"
-          >取消</el-button>
-        </template>
-
-        <template slot-scope="scope" v-else>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            disabled="true"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:info:edit']"
-          >审批中</el-button>
-        </template>
-      </el-table-column> -->
-
+      <el-table-column label="学分" align="center" prop="courseScore1" />
+      
     </el-table>
     
     <pagination
@@ -96,30 +67,13 @@
     />
 
     <!-- 添加或修改【请填写功能名称】对话框 -->
-    <el-dialog :title="title" middle :visible.sync="open" width="500px" append-to-body>
-      <!-- <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="用户id" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入用户id" />
-        </el-form-item>
-        <el-form-item label="工号" prop="workNo">
-          <el-input v-model="form.workNo" placeholder="请输入工号" />
-        </el-form-item>
-        <el-form-item label="班级" prop="workClass">
-          <el-input v-model="form.workClass" placeholder="请输入班级" />
-        </el-form-item>
-        <el-form-item label="导师" prop="teacher">
-          <el-input v-model="form.teacher" placeholder="请输入导师" />
-        </el-form-item>
-      </el-form> -->
+    <el-dialog :title="title" style="text-align: center;" :visible.sync="open" width="800px" append-to-body>
+     <div> <strong>
+       请仔细阅读以下选课规则后，确认所选课程是否符合要求，并满足本年度学分计划后提交申报。
+     </strong>
+     </div>
 
-      <el-col :span="22">
-            <el-form-item label="上传" prop="field111" required>
-              <el-upload ref="field111" :file-list="field111fileList" :action="field111Action"
-                :before-upload="field111BeforeUpload" list-type="picture" name="file_url">
-                <el-button size="small" type="primary" icon="el-icon-upload">点击上传</el-button>
-              </el-upload>
-            </el-form-item>
-          </el-col>
+     <img src="../assets/shuoming.jpg" width="703" height="852" alt="" srcset="">
 
       <!-- 这个位置贴一张说明图片？ -->
       <div slot="footer" class="dialog-footer">
@@ -132,8 +86,20 @@
 
 <script>
 // import { listInfo, getInfo, delInfo, addInfo, updateInfo } from "@/api/system/info";
-import { listCourse, getCourse, delCourse, addCourse, updateCourse } from "@/api/system/course";
+import { listCourse, selectCourse, delCourse, addCourse, updateCourse } from "@/api/system/studentCourse";
 import mockData from '../mock/course_list';
+
+
+const requireEnum = {
+  1:"必修",
+  2:"选修"
+}
+const progressEnum = {
+  0:"未开始",
+  1:"进行中",
+  2:"已完成"
+}
+
 
 export default {
   name: "Info",
@@ -161,6 +127,8 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
+        planId: 1,
+        studentId: null,
         userId: null,
         workNo: null,
         workClass: null,
@@ -193,6 +161,9 @@ export default {
         this.loading = false;
       });
     },
+    getCourseRequire(item) {
+      return requireEnum[item.necessary];
+    },
     // 取消按钮
     cancel() {
       this.open = false;
@@ -222,13 +193,12 @@ export default {
       this.resetForm("queryForm");
       this.handleQuery();
     },
-    handleItem(item) {
-      this.handleSelectionChange([item]);
-    },
+
     // 多选框选中数据
     handleSelectionChange(selection) {
-      console.log(selection, '-----------');
-      this.ids = selection.map(item => item.id)
+      this.ids = selection.map(item => item.courseId);
+      this.selectCourse = selection;
+      console.log(selection, '-----------', this.ids);
       this.single = selection.length!==1
       this.multiple = !selection.length
     },
@@ -249,22 +219,13 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id != null) {
-            updateInfo(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addInfo(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
+      console.log(this.selectCourse, '-----------');
+      // 把选择的课程数组id传入
+      // 选择完课程后，更新学生选课信息
+      selectCourse(this.selectCourse).then(response => {
+        this.$modal.msgSuccess("修改成功");
+        this.open = false;
+        this.getList();
       });
     },
     /** 删除按钮操作 */
