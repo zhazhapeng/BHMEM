@@ -35,7 +35,7 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button
           type="primary"
           plain
@@ -44,7 +44,7 @@
           @click="handleAdd"
           v-hasPermi="['system:score:add']"
         >新增</el-button>
-      </el-col>
+      </el-col> -->
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -82,13 +82,15 @@
 
     <el-table v-loading="loading" :data="scoreList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="课程id" align="center" prop="courseId" />
+      <el-table-column label="年级" align="center" prop="grade" />
       <el-table-column label="课程名称" align="center" prop="courseName" />
       <el-table-column label="课程内容" align="center" prop="courseContent" />
       <el-table-column label="必修/选修" align="center" prop="necessary" :formatter="getNecessaryText" />
       <el-table-column label="要求次数" align="center" prop="requireTimes" />
-      <el-table-column label="课程学分" align="center" prop="courseScore1" />
-      <el-table-column label="授予类型" align="center" prop="grantType" :formatter="getGrantType" />
+      <el-table-column label="完成次数" align="center" prop="finishTimes" />
+      <el-table-column label="状态" align="center" prop="finish" :formatter="getFinishText" />
+      <el-table-column label="课程学分" align="center" prop="score" />
+      <el-table-column label="更新时间" align="center" prop="updateTime" />
 
         <!-- <template slot-scope="scope">
           <el-button
@@ -218,6 +220,11 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+
+    getFinishText(item) {
+      let finishEnum = {0: "进行中", 1: "已通过", 2: "未通过"};
+      return finishEnum[item.finish];
     },
 
     getNecessaryText(item) {

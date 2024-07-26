@@ -50,11 +50,11 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="课程编号" align="center" prop="courseId" />
       <el-table-column label="一级课程名称" align="center" prop="courseName" />
-      <el-table-column label="二级课程名称" align="center" prop="secondCourseName" />
-      <el-table-column label="课程内容" align="center" prop="courseContent" />
+      <el-table-column label="二级课程名称" align="center" prop="courseCategory" />
+      <el-table-column label="课程内容" align="center" width="155" prop="courseContent" />
       <el-table-column label="必修/选修" align="center" prop="necessary" :formatter="getCourseRequire"/>
-      <el-table-column label="需完成次数" align="center" prop="requireTimes" />
-      <el-table-column label="学分" align="center" prop="courseScore1" />
+      <el-table-column label="需完成次数" align="center" prop="requireTimes" :formatter="(item)=> item.requireTimes+'次'" />
+      <el-table-column label="学分" align="center"  prop="score" :formatter="(item)=> item.score+'分'" />
       
     </el-table>
     
@@ -73,7 +73,7 @@
      </strong>
      </div>
 
-     <img src="../assets/shuoming.jpg" width="703" height="852" alt="" srcset="">
+     <img src="../assets/shuoming.jpg" width="583" height="707" alt="" srcset="">
 
       <!-- 这个位置贴一张说明图片？ -->
       <div slot="footer" class="dialog-footer">
@@ -123,6 +123,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 已经选中的课程
+      chooseList: [],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -156,7 +158,9 @@ export default {
       // const response = mockData;
       // console.log(response, '-----------');
       listCourse(this.queryParams).then(response => {
-        this.infoList = response.rows;
+        let responseList = response.rows.filter(item => item.chooseStatus === false);
+        this.chooseList = response.rows.filter(item => item.chooseStatus === true);
+        this.infoList = responseList;
         this.total = response.total;
         this.loading = false;
       });
@@ -219,10 +223,14 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      console.log(this.selectCourse, '-----------');
+      // this.selectCourse = this.selectCourse.map(item => {
+      //   item.studentId = 1;
+      //   return item;
+      // })
       // 把选择的课程数组id传入
       // 选择完课程后，更新学生选课信息
-      selectCourse(this.selectCourse).then(response => {
+      // this.chooseList
+      selectCourse([...this.selectCourse, ...this.chooseList]).then(response => {
         this.$modal.msgSuccess("修改成功");
         this.open = false;
         this.getList();

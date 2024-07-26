@@ -96,6 +96,10 @@
         <el-form-item label="实践收获" prop="apply_gain">
           <el-input v-model="form.apply_gain" placeholder="请输入实践收获" />
         </el-form-item>
+        <el-form-item label="实践日期" prop="date">
+          <el-date-picker v-model="form.date" format="yyyy-MM-dd" value-format="yyyy-MM-dd"
+            :style="{width: '100%'}" placeholder="请选择日期选择" clearable></el-date-picker>
+        </el-form-item>
         <!-- <el-form-item label="展示">
           <editor v-model="form.file_url" :min-height="192"/>
         </el-form-item> -->
@@ -119,8 +123,8 @@
 
 <script>
 // import { listInfo, getInfo, delInfo, addInfo, updateInfo } from "@/api/system/info";
-import { listCourse, getCourse, delCourse, addCourse, updateCourse } from "@/api/system/course";
-import { listRecord, addRecord, updateRecord, delRecord } from "@/api/system/record";
+import { addRecord, studentSelfCourse, updateInfo, delCourse, addCourse, updateCourse } from "@/api/system/studentCourse";
+// import { listRecord, addRecord, updateRecord, delRecord } from "@/api/system/record";
 
 import mockData from '../mock/course_list';
 
@@ -160,7 +164,7 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        userId: null,
+        // studentId: 1,
         workNo: null,
         workClass: null,
         degreeType: null,
@@ -196,7 +200,7 @@ export default {
       this.loading = true;
       
       // const response = mockData;
-      listCourse(this.queryParams).then(response => {
+      studentSelfCourse(this.queryParams).then(response => {
         this.infoList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -321,21 +325,24 @@ export default {
       // this.open = false;
       console.log(this.uploadList, '-----------');
       this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id != null) {
-            updateInfo(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addRecord(this.form).then(response => {
-              this.$modal.msgSuccess("提交成功");
-              this.open = false;
-              this.getList();
-            });
-          }
-        }
+        addRecord(this.form).then(response => {
+            this.$modal.msgSuccess("提交成功");
+            this.open = false;
+            this.getList();
+          });
+
+
+        // if (valid) {
+        //   if (this.form.id != null) {
+        //     updateInfo(this.form).then(response => {
+        //       this.$modal.msgSuccess("修改成功");
+        //       this.open = false;
+        //       this.getList();
+        //     });
+        //   } else {
+            
+        //   }
+        // }
       });
     },
     /** 删除按钮操作 */

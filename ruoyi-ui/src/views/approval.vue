@@ -131,9 +131,9 @@ import { listRecord, getRecord, delRecord, addRecord, updateRecord } from "@/api
 import mockData from '../mock/record_list';
 
 const applyEnum = {
-  1:"未审批",
-  2:"通过",
-  3:"驳回"
+  0:"未审批",
+  1:"通过",
+  2:"驳回"
 }
 
 export default {
